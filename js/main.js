@@ -82,12 +82,14 @@ function onAssetsLoaded(loader, res) {
     char.state.addListener({
         event: function (entry, event) {
             if (debug)
-                console.log(event)
+                console.log(entry, event)
             if (event.stringValue == '')
                 return;
             if (!option.talkSound.checked)
                 return;
             let charName = option.models.options[option.models.selectedIndex].text.replace("_home", "")
+            let lang = entry.animation.name.slice(-2) == 'CN' ? 'CN' : 'JP'
+            var audioKey = (event.stringValue + '.' + lang).toLowerCase()
             //Camalize
             if (charName.indexOf("_") != -1) {
                 charName = charName.toLowerCase().replace(/([-_][a-z])/g, group =>
@@ -99,14 +101,14 @@ function onAssetsLoaded(loader, res) {
             }
             charName = charName.charAt(0).toUpperCase() + charName.slice(1);
             if (debug)
-                console.log(charName)
+                console.log(charName, audioKey)
             //Play
             if (charName == 'MashiroSwimsuit')
                 charName = 'CH0061';
             if (charName == 'ShirokoRidingsuit')
                 charName = 'ShirokoRidingSuit'
             let voice = new Howl({
-                src: [audios[event.stringValue]]
+                src: [audios[audioKey]]
             });
             // If already loaded, play it
             if (voice.state() == 'loaded')
